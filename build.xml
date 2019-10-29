@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- How to execute : %DLC%\ant\bin\ant -lib %DLC%\pct\PCT.jar -DDLC=%DLC% clean build -->
+<project name="DataDigger" >
+  <taskdef resource="PCT.properties" />
+
+  <target name="clean">
+    <delete dir="target" />
+  </target>
+
+  <target name="init">
+    <mkdir dir="target/build" />
+    <mkdir dir="target/db" />
+    <PCTVersion />
+    <ProgressVersion dlcHome="${DLC}" fullVersion="dlc.version.full" />
+    <echo message="${dlc.version.full}" />
+    <sports2000 destDir="target/db" dlcHome="${DLC}" />
+  </target>
+
+  <target name="build" depends="init">
+    <PCTCompile destdir="target/build" graphicalMode="true" dlcHome="${DLC}" cpinternal="utf-8" cpstream="utf-8" listing="true" relativePaths="true" xmlXref="true" keepXref="true" requireFullKeywords="false" requireFullNames="true" requireFieldQualifiers="true">
+      <fileset dir="." includes="*.p,*.w,*.cls" />
+      <DbConnection dbDir="target/db" dbName="sports2000" readOnly="true" />
+      <propath>
+        <pathelement location="." />
+      </propath>
+    </PCTCompile>
+  </target>
+  
+  <target name="dist">
+    <zip destFile="target/DataDigger.zip">
+      <fileset dir="target/build" includes="*.r" />
+      <fileset dir="." includes="*.wrx" />
+      <fileset dir="." includes="*.bat,*.ini,*.txt,image/*" />
+    </zip>
+  </target>
+
+</project>
